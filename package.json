@@ -1,0 +1,11 @@
+{
+  "name": "datashare-pages",
+  "version": "1.0.0",
+  "private": true,
+  "description": "基于 GitHub Pages 的开放数据分享与引用链接生成站点",
+  "scripts": {
+    "serve": "python -m http.server 8080",
+    "start": "python -m http.server 8080"
+  },
+  "license": "MIT"
+}

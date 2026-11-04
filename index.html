@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataShare · 开放数据下载与引用链接生成</title>
+<meta name="description" content="基于 GitHub 的开放数据分享站点：浏览数据集、直接下载原始文件，并一键生成可用于论文与文章的永久链接和引用格式。">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232f6feb'/%3E%3Cpath d='M28 62h44M28 50h44M28 38h30' stroke='white' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/config.js"></script>
+<script src="data/datasets.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#/">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="7.5" ry="3"/><path d="M4.5 5.5v6c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3v-6"/><path d="M4.5 11.5v6c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3v-6"/></svg>
+      </span>
+      <span class="brand-text">
+        <strong>DataShare</strong>
+        <em>开放数据 · 一键引用</em>
+      </span>
+    </a>
+
+    <nav class="site-nav" aria-label="主导航">
+      <a href="#/" data-nav="home">数据集</a>
+      <a href="#/about" data-nav="about">使用说明</a>
+      <a href="https://github.com/" id="github-link" target="_blank" rel="noopener">GitHub</a>
+      <button id="open-settings" class="btn btn-sm" type="button">仓库设置</button>
+      <a id="repo-link" class="nav-gh" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        <span>仓库</span>
+      </a>
+      <button id="theme-toggle" class="icon-btn" type="button" title="切换主题" aria-label="切换主题">🌗</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+  <!-- ============ 首页 ============ -->
+  <section id="home-view">
+    <section class="hero">
+      <p class="eyebrow">GitHub Pages · 静态托管 · 免注册下载</p>
+      <h1>把数据放在 GitHub，<br><span class="hl">把链接放进文章里。</span></h1>
+      <p class="lede">
+        每个数据集都有稳定的原始文件链接（raw / jsDelivr CDN / Release 附件），
+        并提供 BibTeX、APA、GB/T 7714 与「数据可用性声明」模板，可直接粘到论文或博客中。
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#grid">浏览数据集</a>
+        <a class="btn" href="#generator" id="jump-generator">生成链接</a>
+      </div>
+      <dl class="stats" id="stats"></dl>
+    </section>
+
+    <section id="generator" class="panel generator" aria-labelledby="gen-title">
+      <h2 id="gen-title">GitHub 链接生成器</h2>
+      <p class="hint" style="margin-top:-.35rem">填仓库与文件路径，直接得到可写进论文、README 或博客的下载链接。</p>
+      <div class="gen-form">
+        <label>仓库（owner/repo）
+          <input id="gen-repo" type="text" placeholder="owner/repo" autocomplete="off" spellcheck="false">
+        </label>
+        <label>分支或 tag
+          <input id="gen-ref" type="text" placeholder="main" autocomplete="off" spellcheck="false">
+        </label>
+        <label class="gen-wide">文件路径
+          <input id="gen-path" type="text" placeholder="data/files/example.csv" autocomplete="off" spellcheck="false">
+        </label>
+      </div>
+      <div id="gen-output" class="gen-output" hidden></div>
+    </section>
+
+    <section class="toolbar" aria-label="筛选">
+      <div class="search">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="search" type="search" placeholder="搜索数据集、关键词或文件格式…" autocomplete="off" aria-label="搜索">
+      </div>
+      <div class="chips" id="tag-filters"></div>
+    </section>
+
+    <section id="grid" class="grid" aria-live="polite"></section>
+    <p id="empty" class="empty" hidden>没有匹配的数据集，试试其他关键词。</p>
+  </section>
+
+  <!-- ============ 详情页 ============ -->
+  <section id="detail-view" hidden></section>
+
+  <!-- ============ 说明页 ============ -->
+  <section id="about-view" hidden>
+    <article class="prose">
+      <h1>使用说明</h1>
+      <h2>1 · 下载数据</h2>
+      <p>每个数据集页都提供三种链接，按用途选择：</p>
+      <ul>
+        <li><strong>原始文件（raw）</strong>：<code>raw.githubusercontent.com/&lt;user&gt;/&lt;repo&gt;/&lt;ref&gt;/&lt;path&gt;</code>，适合 <code>pandas.read_csv</code>、<code>wget</code>、<code>curl</code> 直接抓取。</li>
+        <li><strong>CDN 加速（jsDelivr）</strong>：<code>cdn.jsdelivr.net/gh/&lt;user&gt;/&lt;repo&gt;@&lt;ref&gt;/&lt;path&gt;</code>，全球加速且带缓存，适合网页端读取。</li>
+        <li><strong>GitHub 页面 / Release 附件</strong>：适合人工浏览与长期归档；打 tag 后链接永久不变。</li>
+      </ul>
+
+      <h2>2 · 让链接永久有效</h2>
+      <p>
+        <code>main</code> 分支上的内容会随提交变化。论文引用请使用
+        <strong>tag（版本号）</strong>而不是分支名，例如 <code>@v1.2.0</code>。
+        发版命令：
+      </p>
+      <pre><code>git tag -a v1.2.0 -m "release v1.2.0"
+git push origin v1.2.0</code></pre>
+      <p>更正式的长期归档可以再把同一份数据上传到 Zenodo（GitHub 仓库打 tag 后自动获得 DOI），然后在数据集元数据里填入 <code>doi</code> 字段。</p>
+
+      <h2>3 · 在文章中引用</h2>
+      <p>打开任一数据集，点击「引用与链接」即可复制：</p>
+      <ul>
+        <li>BibTeX（LaTeX / Overleaf）</li>
+        <li>APA 第 7 版（英文期刊常用）</li>
+        <li>GB/T 7714—2015（中文期刊与学位论文）</li>
+        <li>Markdown 行内引用（博客、README）</li>
+        <li>数据可用性声明（Data Availability Statement）</li>
+      </ul>
+
+      <h2>4 · 发布你自己的站点</h2>
+      <p>把本仓库推到自己的 GitHub 账号，执行仓库根目录的 <code>scripts/publish.ps1</code>，脚本会：</p>
+      <ol>
+        <li>检测 <code>git</code> / <code>gh</code> 并引导登录；</li>
+        <li>创建远程仓库、提交并推送；</li>
+        <li>开启 GitHub Pages（Actions 构建）并打印最终网址。</li>
+      </ol>
+      <p>详细步骤见仓库根目录的 <code>README.md</code>。</p>
+    </article>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>© <span id="year"></span> DataShare · 数据以 <a id="license-link" href="#" target="_blank" rel="noopener">CC BY 4.0</a> 许可共享</p>
+    <p class="muted">托管于 GitHub Pages · 站点数据由 <code>data/datasets.js</code> 驱动</p>
+  </div>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<!-- 设置对话框 -->
+<dialog id="settings" class="dialog">
+  <form method="dialog" class="dialog-body">
+    <h2>仓库设置</h2>
+    <p class="muted">填写后所有链接会自动按 “拥有者/仓库名” 生成。留空则自动从 GitHub Pages 域名推断。</p>
+    <label>GitHub 用户名 / 组织
+      <input id="cfg-owner" type="text" placeholder="例如 zhaoyi" autocomplete="off">
+    </label>
+    <label>仓库名
+      <input id="cfg-repo" type="text" placeholder="例如 data-share" autocomplete="off">
+    </label>
+    <label>默认分支或 tag
+      <input id="cfg-ref" type="text" placeholder="例如 main 或 v1.2.0" autocomplete="off">
+    </label>
+    <label>站点根地址（可选）
+      <input id="cfg-site" type="text" placeholder="https://user.github.io/repo/" autocomplete="off">
+    </label>
+    <div class="dialog-actions">
+      <button class="btn" value="reset" id="cfg-reset" type="button">恢复自动推断</button>
+      <button class="btn btn-primary" value="save" type="submit">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>
