@@ -1,6 +1,5 @@
 # Medicine-Box Dataset
 
-This repository serves as the official data portal for our paper. 
 
 ## 1. Our Purpose-built Dataset
 The complete Medicine-Box dataset used in this study is publicly available via Baidu Netdisk:
